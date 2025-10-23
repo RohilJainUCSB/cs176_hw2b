@@ -3,4 +3,4 @@ All of these files, for example, need to develop an appropriate socket for their
 After these sockets are developed and the appropriate identifiers are added, all of this information of course must be bound to a port.
 From there, all of these files do what their role and actions are. The servers will be responsible for taking input, producing ouput/s, and awaiting a new input or closing the connection. The clients are responsible for contacting the server with data, handling the response/s, and terminating. Again, C provides some libraries to simplify this, especially with string manipulation.
 These network "machines" utilize buffers of characters to actually manage the data they handle. This allows for data to be appropriately stored and sent while also helping deal with the differences in how each protocol transmits and receives data.
-The only thing that doesn't work perfectly is the makefile's make all and make clean commands on CSIL. For some reason, just those two commands don't function. All other aspects of the makefile work fine.
+From the testing I've done, it appears to be fully functional.

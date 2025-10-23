@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
 
         if (!isValid)
         {
-            send(client_socket_fd, "Sorry, cannot compute!", 24, 0);
+            send(client_socket_fd, "From server: Sorry, cannot compute!<END>", 41, 0);
             close(client_socket_fd);
             continue; //Skip this input if it is invalid
         }

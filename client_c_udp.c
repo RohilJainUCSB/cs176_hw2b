@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
 
         printf("%s\n", buffer);
 
-        if (strcmp(buffer, "Sorry, cannot compute!") == 0)
+        if (strcmp(buffer, "From server: Sorry, cannot compute!") == 0)
         {
             return 0;
         }

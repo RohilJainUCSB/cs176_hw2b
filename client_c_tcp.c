@@ -46,16 +46,18 @@ int main(int argc, char * argv[])
             char * end_marker = strstr(start, "<END>"); //This helps by processing the input delimiters from the server
             if(!end_marker) break; //If there is no longer an <END> remaining, then we have processed the whole buffer
             *end_marker = '\0'; //This uses that slice from the above code and sets it to be a message terminator so that the prints don't include it
+
             if (strlen(start) > 0) //We only want to print if it is nonempty
             {
                 printf("%s\n", start);
             }
 
-            if (strcmp(start, "Sorry, cannot compute!") == 0) //If it can't be computed we can terminate this whole process
+            if (strcmp(start, "From server: Sorry, cannot compute!") == 0) //If it can't be computed we can terminate this whole process
             {
+                close(client_socket_fd);
                 return 0;
             }
-
+            
             int value = atoi(start + strlen("From server: "));
             if (value < 10) //This means the last response has been received so we can terminate the client
             {

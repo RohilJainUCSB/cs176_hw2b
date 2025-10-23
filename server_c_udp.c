@@ -42,7 +42,7 @@ int main(int argc, char * argv[])
 
         if (!isValid)
         {
-            sendto(server_socket_fd, "Sorry, cannot compute!", 24, 0, (struct sockaddr *)&client_addr, client_addr_len);
+            sendto(server_socket_fd, "From server: Sorry, cannot compute!", 36, 0, (struct sockaddr *)&client_addr, client_addr_len);
             continue; //Skip this input if it is invalid
         }
 

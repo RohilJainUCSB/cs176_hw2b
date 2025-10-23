@@ -28,7 +28,7 @@ int main(int argc, char * argv[])
     while (true)
     {
         int client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len); //This does the handhsake and stores the client data
-        char buffer[128];
+        char buffer[256];
         ssize_t data_received = recv(client_socket_fd, buffer, sizeof(buffer) - 1, 0);
         buffer[data_received] = '\0';
 

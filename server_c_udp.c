@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
 
     while (true)
     {
-        char buffer[128];
+        char buffer[256];
         ssize_t data_received = recvfrom(server_socket_fd, buffer, sizeof(buffer) - 1, 0, (struct sockaddr *)&client_addr, &client_addr_len);
         buffer[data_received] = '\0';
 

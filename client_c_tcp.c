@@ -25,13 +25,13 @@ int main(int argc, char * argv[])
     socklen_t server_addr_len = sizeof(server_addr);
 
     printf("Enter string: ");
-    char input[128];
+    char input[512];
     fgets(input, sizeof(input), stdin);
     input[strcspn(input, "\n")] = '\0'; //This removes the new line
 
     send(client_socket_fd, input, strlen(input), 0); //This sends the user input to the server
 
-    char buffer[256];
+    char buffer[2048];
     int total_received = 0; //TCP is a stream-based connection, so this will be used to ensure all the separate messages are separated appropriately
     while (true)
     {

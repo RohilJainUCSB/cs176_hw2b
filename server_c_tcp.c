@@ -28,7 +28,8 @@ int main(int argc, char * argv[])
     while (true)
     {
         int client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len); //This does the handhsake and stores the client data
-        char buffer[256];
+        char buffer[2048];
+        char digit_buffer[512];
         ssize_t data_received = recv(client_socket_fd, buffer, sizeof(buffer) - 1, 0);
         buffer[data_received] = '\0';
 
@@ -58,18 +59,20 @@ int main(int argc, char * argv[])
         snprintf(buffer, sizeof(buffer), "From server: %d<END>", sum); //The use of <END> here is as a delimiter. It helps ensure appropriate output is displayed with some additional processing on the <END> chars on the client end
         send(client_socket_fd, buffer, strlen(buffer), 0);
 
-        snprintf(buffer, sizeof(buffer), "%d", sum); //Reset the buffer
+        memset(buffer, 0, sizeof(buffer));
+        snprintf(digit_buffer, sizeof(digit_buffer), "%d", sum); //Reset the buffer
         while (sum >= 10)
         {
             sum = 0;
-            for (int i = 0; buffer[i] != '\0'; ++i)
+            for (int i = 0; digit_buffer[i] != '\0'; ++i)
             {
-                sum += buffer[i] - '0';
+                sum += digit_buffer[i] - '0';
             }
-            snprintf(buffer, sizeof(buffer), "From server: %d<END>", sum); //The use of <END> here is as a delimiter. It helps ensure appropriate output is displayed with some additional processing on the <END> chars on the client end
-            send(client_socket_fd, buffer, strlen(buffer), 0);
 
-            snprintf(buffer, sizeof(buffer), "%d", sum); //Reset the buffer
+            snprintf(buffer, sizeof(buffer), "From server: %d<END>", sum); //The use of <END> here is as a delimiter. It helps ensure appropriate output is displayed with some additional processing on the <END> chars on the client end
+            send(client_socket_fd, buffer, strlen(buffer), 0); //Reset the char buffer
+
+            snprintf(digit_buffer, sizeof(digit_buffer), "%d", sum); //Reset the number buffer
         }
     }
     return 0;

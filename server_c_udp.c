@@ -26,7 +26,8 @@ int main(int argc, char * argv[])
 
     while (true)
     {
-        char buffer[256];
+        char buffer[2048];
+        char digit_buffer[512];
         ssize_t data_received = recvfrom(server_socket_fd, buffer, sizeof(buffer) - 1, 0, (struct sockaddr *)&client_addr, &client_addr_len);
         buffer[data_received] = '\0';
 
@@ -46,19 +47,33 @@ int main(int argc, char * argv[])
             continue; //Skip this input if it is invalid
         }
 
+        strncpy(digit_buffer, buffer, sizeof(digit_buffer) - 1);
+        digit_buffer[sizeof(digit_buffer) - 1] = '\0';
+
+        int sum = 0;
+        for (int i = 0; digit_buffer[i] != '\0'; ++i)
+        {
+            sum += digit_buffer[i] - '0';
+        }
+
+        snprintf(buffer, sizeof(buffer), "From server: %d<END>", sum);
+        sendto(server_socket_fd, buffer, strlen(buffer), 0, (struct sockaddr *)&client_addr, client_addr_len);
+        
+        memset(buffer, 0, sizeof(buffer));
+        snprintf(digit_buffer, sizeof(digit_buffer), "%d", sum); //Reset the buffer
         //This will now loop to send the new sum until it is a single digit value
-        int sum = 1000; //Dummy value for the sum to let the first loop iteration run
         while (sum >= 10)
         {
             sum = 0;
-            for (int i = 0; buffer[i] != '\0'; ++i)
+            for (int i = 0; digit_buffer[i] != '\0'; ++i)
             {
-                sum += buffer[i] - '0';
+                sum += digit_buffer[i] - '0';
             }
-            snprintf(buffer, sizeof(buffer), "From server: %d", sum);
+
+            snprintf(buffer, sizeof(buffer), "From server: %d<END>", sum); //The use of <END> here is as a delimiter. It helps ensure appropriate output is displayed with some additional processing on the <END> chars on the client end
             sendto(server_socket_fd, buffer, strlen(buffer), 0, (struct sockaddr *)&client_addr, client_addr_len);
 
-            snprintf(buffer, sizeof(buffer), "%d", sum); //Reset the buffer
+            snprintf(digit_buffer, sizeof(digit_buffer), "%d", sum); //Reset the number buffer
         }
     }
     return 0;

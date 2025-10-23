@@ -23,17 +23,23 @@ int main(int argc, char * argv[])
     socklen_t server_addr_len = sizeof(server_addr);
 
     printf("Enter string: ");
-    char input[128];
+    char input[512];
     fgets(input, sizeof(input), stdin);
     input[strcspn(input, "\n")] = '\0'; //This removes the new line
 
     sendto(client_socket_fd, input, strlen(input), 0, (const struct sockaddr *)&server_addr, server_addr_len); //This sends the user input to the server
 
+    char buffer[2048];
     while (true)
     {
-        char buffer[128];
         ssize_t recv_len = recvfrom(client_socket_fd, buffer, sizeof(buffer) - 1, 0, (struct sockaddr *)&server_addr, &server_addr_len);
         buffer[recv_len] = '\0'; //Set the end char of the buffer
+
+        //Remove the <END> delimiter
+        char *end_marker = strstr(buffer, "<END>");
+        if (end_marker) {
+            *end_marker = '\0'; // Truncate the string at <END>
+        }
 
         printf("%s\n", buffer);
 
